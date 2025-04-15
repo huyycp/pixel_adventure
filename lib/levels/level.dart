@@ -4,26 +4,32 @@ import 'package:flame/components.dart';
 import 'package:flame_tiled/flame_tiled.dart';
 import 'package:pixel_adventure/data/constants/game_constants.dart';
 import 'package:pixel_adventure/character.dart';
+import 'package:pixel_adventure/utils/enum_utils.dart';
 
 class Level extends World {
+  Level({
+    this.world = GameWorlds.level2,
+    required this.character,
+  });
 
-  late TiledComponent component;
+  final GameWorlds world;
+  final Character character;
 
   @override
   FutureOr<void> onLoad() async {
-    component = await TiledComponent.load(
-      'level_1.tmx',
+    final component = await TiledComponent.load(
+      '${world.name}.tmx',
       Vector2.all(16)
     );
 
     add(component);
 
-    final spawnPointsLayer = component.tileMap.getLayer<ObjectGroup>(GameLayers.spawnPoints);
+    final spawnPointsLayer = component.tileMap.getLayer<ObjectGroup>(GameLayers.spawnPoints.name);
 
     for (var point in spawnPointsLayer!.objects) {
-      switch (point.class_) {
+      final object = enumFromString(GameObjects.values, point.class_, GameObjects.unknown);
+      switch (object) {
         case GameObjects.character:
-          final character = Character(GameCharacters.virtualGuy);
           character.position = point.position;
           add(character);
           break;

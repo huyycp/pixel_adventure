@@ -1,10 +1,10 @@
 import 'dart:async';
-
 import 'package:flame/components.dart';
+import 'package:flutter/services.dart';
 import 'package:pixel_adventure/pixel_adventure.dart';
 import 'package:pixel_adventure/utils/extensions/string_ex.dart';
 
-class Character extends SpriteAnimationGroupComponent with HasGameRef<PixelAdventure> {
+class Character extends SpriteAnimationGroupComponent with HasGameRef<PixelAdventure>, KeyboardHandler {
   
   Character(this.character);
 
@@ -22,6 +22,27 @@ class Character extends SpriteAnimationGroupComponent with HasGameRef<PixelAdven
   FutureOr<void> onLoad() {
     onLoadAnimation();
     return super.onLoad();
+  }
+
+  @override
+  bool onKeyEvent(KeyEvent event, Set<LogicalKeyboardKey> keysPressed) {
+    final isLeftKeyPressed = 
+      keysPressed.contains(LogicalKeyboardKey.arrowLeft) ||
+      keysPressed.contains(LogicalKeyboardKey.keyA);
+    final isRightKeyPressed =
+      keysPressed.contains(LogicalKeyboardKey.arrowRight) ||
+      keysPressed.contains(LogicalKeyboardKey.keyD);
+
+    if (isLeftKeyPressed && isRightKeyPressed) {
+      direction = GameCharacterDirections.none;
+    } else if (isLeftKeyPressed) {
+      direction = GameCharacterDirections.left;
+    } else if (isRightKeyPressed) {
+      direction = GameCharacterDirections.right;
+    } else {
+      direction = GameCharacterDirections.none;
+    }
+    return super.onKeyEvent(event, keysPressed);
   }
 
   void onLoadAnimation() {
@@ -58,13 +79,16 @@ class Character extends SpriteAnimationGroupComponent with HasGameRef<PixelAdven
       case GameCharacterDirections.left:
         if (isPacingRight) {
           isPacingRight = false;
-          flipHorizontally();
           flipHorizontallyAroundCenter();
         }
         position.add(Vector2(-moveSpeed * dt, 0));
         current = GameCharacterStates.run;
         break;
       case GameCharacterDirections.right:
+        if (!isPacingRight) {
+          isPacingRight = true;
+          flipHorizontallyAroundCenter();
+        }
         position.add(Vector2(moveSpeed * dt, 0));
         current = GameCharacterStates.run;
         break;

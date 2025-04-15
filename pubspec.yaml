@@ -95,4 +95,6 @@ flutter:
     - assets/images/main_characters/ninja_frog/
     - assets/images/main_characters/pink_man/
     - assets/images/main_characters/virtual_guy/
-    - assets/tiles/   
+    - assets/images/hub/joystick/
+    - assets/tiles/
+    - assets/images/Terrain/

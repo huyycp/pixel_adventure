@@ -1,13 +1,41 @@
-class GameLayers {
-  GameLayers._();
+enum GameLayers {
+  background('background'),
+  spawnPoints('spawn_points');
 
-  static const String background  = 'background';
-  static const String spawnPoints = 'spawn_points';
+  final String name;
+
+  const GameLayers(this.name);
 }
 
-class GameObjects {
-  GameObjects._();
+enum GameObjects {
+  character,
+  enemy,
+  unknown,
+}
 
-  static const String character = 'character';
-  static const String enemy = 'enemy';
+enum GameComponents {
+  joystickKnob('hub/joystick/knob.png'),
+  joystickBackground('hub/joystick/background.png');
+
+  final String path;
+
+  const GameComponents(this.path);
+}
+
+enum GameWorlds {
+  level1('level_1', horizontalTile: 40, verticalTile: 23),
+  level2('level_2', horizontalTile: 60, verticalTile: 43);
+
+  final String name;
+  final int horizontalTile;
+  final int verticalTile;
+
+  double get width => horizontalTile * GameConstants.tileSize;
+  double get height => verticalTile * GameConstants.tileSize;
+
+  const GameWorlds(this.name, {this.horizontalTile = 0, this.verticalTile = 0});
+}
+
+class GameConstants {
+  static const double tileSize = 16;
 }
