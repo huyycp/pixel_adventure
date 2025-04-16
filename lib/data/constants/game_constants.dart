@@ -12,6 +12,7 @@ enum GameObjects {
   character,
   enemy,
   platform,
+  fruit,
   unknown,
 }
 

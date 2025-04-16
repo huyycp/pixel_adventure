@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flame/components.dart';
 import 'package:flame_tiled/flame_tiled.dart';
 import 'package:pixel_adventure/components/collision_component.dart';
+import 'package:pixel_adventure/components/fruit_component.dart';
 import 'package:pixel_adventure/data/constants/game_constants.dart';
 import 'package:pixel_adventure/components/character.dart';
 import 'package:pixel_adventure/utils/enum_utils.dart';
@@ -49,6 +50,15 @@ class Level extends World {
         case GameObjects.character:
           character.position = point.position;
           add(character);
+          break;
+        case GameObjects.fruit:
+          final fruit = point.name;
+          final fruitComponent = FruitComponent(
+            fruit: fruit,
+            position: point.position,
+            size: point.size,
+          );
+          add(fruitComponent);
           break;
         default:
           break;

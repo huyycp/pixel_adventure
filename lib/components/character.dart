@@ -1,11 +1,14 @@
 import 'dart:async';
+import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
 import 'package:flutter/services.dart';
 import 'package:pixel_adventure/components/collision_component.dart';
+import 'package:pixel_adventure/components/component_hitbox.dart';
+import 'package:pixel_adventure/components/fruit_component.dart';
 import 'package:pixel_adventure/pixel_adventure.dart';
 import 'package:pixel_adventure/utils/extensions/string_ex.dart';
 
-class Character extends SpriteAnimationGroupComponent with HasGameRef<PixelAdventure>, KeyboardHandler {
+class Character extends SpriteAnimationGroupComponent with HasGameRef<PixelAdventure>, KeyboardHandler, CollisionCallbacks {
   
   Character(this.character);
 
@@ -30,10 +33,25 @@ class Character extends SpriteAnimationGroupComponent with HasGameRef<PixelAdven
   final double terminalVelocity = 1000;
   bool isOnGround = true;
   bool hasJumped = false;
+  final ComponentHitbox hitbox = const ComponentHitbox(
+    offsetX: 2,
+    offsetY: 2,
+    width: 24,
+    height: 24,
+  );
+
+  Map<String, int> collectedFruits = {};
 
   @override
   FutureOr<void> onLoad() {
     onLoadAnimation();
+
+    add(
+      RectangleHitbox(
+        size: Vector2(hitbox.width, hitbox.height),
+        position: Vector2(hitbox.offsetX, hitbox.offsetY),
+      ),
+    );
     return super.onLoad();
   }
 
@@ -62,6 +80,14 @@ class Character extends SpriteAnimationGroupComponent with HasGameRef<PixelAdven
       keysPressed.contains(LogicalKeyboardKey.keyW);
 
     return super.onKeyEvent(event, keysPressed);
+  }
+
+  @override
+  void onCollision(Set<Vector2> intersectionPoints, PositionComponent other) {
+    if (other is FruitComponent) {
+      collectedFruits[other.fruit] = (collectedFruits[other.fruit] ?? 0) + 1;
+    }
+    super.onCollision(intersectionPoints, other);
   }
 
   void onLoadAnimation() {

@@ -6,7 +6,7 @@ import 'package:pixel_adventure/components/character.dart';
 import 'package:pixel_adventure/data/constants/game_constants.dart';
 import 'package:pixel_adventure/components/level.dart';
 
-class PixelAdventure extends FlameGame with HasKeyboardHandlerComponents, DragCallbacks {
+class PixelAdventure extends FlameGame with HasKeyboardHandlerComponents, DragCallbacks, HasCollisionDetection {
   late final Character character;
   late final JoystickComponent joystick;
   final bool isJoystickEnabled = false;
