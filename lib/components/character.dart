@@ -13,10 +13,12 @@ class Character extends SpriteAnimationGroupComponent with HasGameRef<PixelAdven
   late final SpriteAnimation idleAnimation;
   late final SpriteAnimation runAnimation;
 
-  GameCharacterDirections direction = GameCharacterDirections.none;
   double moveSpeed = 100;
   Vector2 velocity = Vector2.zero();
-  bool isPacingRight = true;
+
+  /// Value : -1, 0, 1
+  /// -1 = left, 0 = none, 1 = right
+  int horizontalMovement = 0;
 
   @override
   FutureOr<void> onLoad() {
@@ -34,13 +36,13 @@ class Character extends SpriteAnimationGroupComponent with HasGameRef<PixelAdven
       keysPressed.contains(LogicalKeyboardKey.keyD);
 
     if (isLeftKeyPressed && isRightKeyPressed) {
-      direction = GameCharacterDirections.none;
+      horizontalMovement = 0;
     } else if (isLeftKeyPressed) {
-      direction = GameCharacterDirections.left;
+      horizontalMovement = -1;
     } else if (isRightKeyPressed) {
-      direction = GameCharacterDirections.right;
+      horizontalMovement = 1;
     } else {
-      direction = GameCharacterDirections.none;
+      horizontalMovement = 0;
     }
     return super.onKeyEvent(event, keysPressed);
   }
@@ -60,7 +62,8 @@ class Character extends SpriteAnimationGroupComponent with HasGameRef<PixelAdven
   @override
   void update(double dt) {
     super.update(dt);
-    _updateCharaterPosition(dt);
+    _updateCharacterMovement(dt);
+    _updateCharacterState(dt);
   }
 
   SpriteAnimation _createAnimation(GameCharacterStates state, {required int frameAmount}) {
@@ -74,28 +77,24 @@ class Character extends SpriteAnimationGroupComponent with HasGameRef<PixelAdven
     );
   }
 
-  void _updateCharaterPosition(double dt) {
-    switch (direction) {
-      case GameCharacterDirections.left:
-        if (isPacingRight) {
-          isPacingRight = false;
-          flipHorizontallyAroundCenter();
-        }
-        position.add(Vector2(-moveSpeed * dt, 0));
-        current = GameCharacterStates.run;
-        break;
-      case GameCharacterDirections.right:
-        if (!isPacingRight) {
-          isPacingRight = true;
-          flipHorizontallyAroundCenter();
-        }
-        position.add(Vector2(moveSpeed * dt, 0));
-        current = GameCharacterStates.run;
-        break;
-      case GameCharacterDirections.none:
-        current = GameCharacterStates.idle;
-        break;
+  void _updateCharacterState(double dt) {
+    if (velocity.x == 0) {
+      current = GameCharacterStates.idle;
+    } else {
+      final isMovingLeft = velocity.x < 0;
+      if (
+        (isMovingLeft && scale.x > 0) || 
+        (!isMovingLeft && scale.x < 0)
+      ) {
+        flipHorizontallyAroundCenter();
+      }
+      current = GameCharacterStates.run;
     }
+  }
+
+  void _updateCharacterMovement(double dt) {
+    velocity.x = horizontalMovement * moveSpeed;
+    position.add(velocity * dt);
   }
 }
 
@@ -124,10 +123,4 @@ enum GameCharacterStates {
   wallJump;
 
   String getPath({int size = 32}) => '${name.camelToSnake}_${size}x$size.png';
-}
-
-enum GameCharacterDirections {
-  left,
-  right,
-  none,
 }

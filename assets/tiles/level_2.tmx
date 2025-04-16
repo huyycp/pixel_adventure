@@ -49,6 +49,6 @@
 </data>
  </layer>
  <objectgroup id="2" name="spawn_points">
-  <object id="1" name="Player1" type="character" x="316.939" y="599.082" width="32" height="32"/>
+  <object id="1" name="Player1" type="character" x="316.939" y="605.082" width="32" height="32"/>
  </objectgroup>
 </map>

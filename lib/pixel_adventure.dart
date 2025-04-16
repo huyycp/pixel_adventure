@@ -2,9 +2,9 @@ import 'package:flame/components.dart';
 import 'package:flame/events.dart';
 import 'package:flame/game.dart';
 import 'package:flutter/material.dart';
-import 'package:pixel_adventure/character.dart';
+import 'package:pixel_adventure/components/character.dart';
 import 'package:pixel_adventure/data/constants/game_constants.dart';
-import 'package:pixel_adventure/levels/level.dart';
+import 'package:pixel_adventure/components/level.dart';
 
 class PixelAdventure extends FlameGame with HasKeyboardHandlerComponents, DragCallbacks {
   late final Character character;
@@ -66,15 +66,15 @@ class PixelAdventure extends FlameGame with HasKeyboardHandlerComponents, DragCa
       case JoystickDirection.left:
       case JoystickDirection.upLeft:
       case JoystickDirection.downLeft:
-        character.direction = GameCharacterDirections.left;
+        character.horizontalMovement = -1;
         break;
       case JoystickDirection.right:
       case JoystickDirection.upRight:
       case JoystickDirection.downRight:
-        character.direction = GameCharacterDirections.right;
+        character.horizontalMovement = 1;
         break;
       default:
-        character.direction = GameCharacterDirections.none;
+        character.horizontalMovement = 0;
     }
   }
 }
