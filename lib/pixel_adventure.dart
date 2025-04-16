@@ -9,7 +9,7 @@ import 'package:pixel_adventure/components/level.dart';
 class PixelAdventure extends FlameGame with HasKeyboardHandlerComponents, DragCallbacks {
   late final Character character;
   late final JoystickComponent joystick;
-  final bool isJoystickEnabled = true;
+  final bool isJoystickEnabled = false;
 
   @override
   Future<void> onLoad() async {

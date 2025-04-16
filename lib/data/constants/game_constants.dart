@@ -1,6 +1,7 @@
 enum GameLayers {
   background('background'),
-  spawnPoints('spawn_points');
+  spawnPoints('spawn_points'),
+  collisions('collisions'),;
 
   final String name;
 
@@ -10,6 +11,7 @@ enum GameLayers {
 enum GameObjects {
   character,
   enemy,
+  platform,
   unknown,
 }
 
