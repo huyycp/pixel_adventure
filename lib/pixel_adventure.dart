@@ -3,17 +3,18 @@ import 'package:flame/events.dart';
 import 'package:flame/game.dart';
 import 'package:flutter/material.dart';
 import 'package:pixel_adventure/components/character.dart';
+import 'package:pixel_adventure/components/shoot_button.dart';
 import 'package:pixel_adventure/data/constants/game_constants.dart';
 import 'package:pixel_adventure/components/level.dart';
 
 class PixelAdventure extends FlameGame with HasKeyboardHandlerComponents, DragCallbacks, HasCollisionDetection {
   late final Character character;
   late final JoystickComponent joystick;
-  final bool isJoystickEnabled = true;
+  final bool isJoystickEnabled = false;
 
   @override
   Future<void> onLoad() async {
-    character = Character(GameCharacters.maskDude);
+    character = Character(GameCharacters.virtualGuy);
     final level = Level(character: character);
     world = level;
     camera = CameraComponent.withFixedResolution(
@@ -36,6 +37,14 @@ class PixelAdventure extends FlameGame with HasKeyboardHandlerComponents, DragCa
     if (isJoystickEnabled) {
       addJoystick();
     }
+
+    camera.viewport.add(ShootButton(
+      position: Vector2(size.x - 100, size.y - 100),
+      size: Vector2(64, 64),
+      onShoot: () {
+        level.shoot();
+      }
+    ));
 
     return super.onLoad();
   } 

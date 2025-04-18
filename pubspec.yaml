@@ -100,3 +100,5 @@ flutter:
     - assets/images/Terrain/
     - assets/images/items/fruits/
     - assets/images/traps/Saw/
+    - assets/images/background/
+    - assets/images/Other/

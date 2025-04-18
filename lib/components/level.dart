@@ -1,15 +1,19 @@
 import 'dart:async';
 
 import 'package:flame/components.dart';
+import 'package:flame/parallax.dart';
 import 'package:flame_tiled/flame_tiled.dart';
+import 'package:flutter/painting.dart';
+import 'package:pixel_adventure/components/bullet_component.dart';
 import 'package:pixel_adventure/components/collision_component.dart';
 import 'package:pixel_adventure/components/fruit_component.dart';
 import 'package:pixel_adventure/components/saw_component.dart';
 import 'package:pixel_adventure/data/constants/game_constants.dart';
 import 'package:pixel_adventure/components/character.dart';
+import 'package:pixel_adventure/pixel_adventure.dart';
 import 'package:pixel_adventure/utils/enum_utils.dart';
 
-class Level extends World {
+class Level extends World with HasGameRef<PixelAdventure> {
   Level({
     this.world = GameWorlds.level2,
     required this.character,
@@ -33,7 +37,7 @@ class Level extends World {
 
     _addCollisionLayer();
 
-    // debugMode = true;
+    debugMode = true;
 
     return super.onLoad();
   }
@@ -110,4 +114,14 @@ class Level extends World {
     character.collisionComponents = collisionComponents;
   }
 
+  void shoot() {
+    final bullet = BulletComponent(
+      direction: character.scale.x > 0 ? 1 : -1,
+      position: Vector2(
+        character.position.x + (character.scale.x > 0 ? character.size.x : -character.size.x),
+        character.position.y + character.size.y / 2,
+      ),
+    );
+    add(bullet);
+  }
 }
