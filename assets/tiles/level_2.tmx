@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.11.2" orientation="orthogonal" renderorder="right-down" width="60" height="43" tilewidth="16" tileheight="16" infinite="0" nextlayerid="4" nextobjectid="43">
+<map version="1.10" tiledversion="1.11.2" orientation="orthogonal" renderorder="right-down" width="60" height="43" tilewidth="16" tileheight="16" infinite="0" nextlayerid="4" nextobjectid="49">
  <tileset firstgid="1" source="pixel_adventure.tsx"/>
  <layer id="1" name="Tile Layer 1" width="60" height="43">
   <data encoding="csv">
@@ -58,6 +58,20 @@
   <object id="40" name="bananas" type="fruit" x="416" y="448" width="32" height="32"/>
   <object id="41" name="melon" type="fruit" x="640" y="368" width="32" height="32"/>
   <object id="42" name="melon" type="fruit" x="592" y="560" width="32" height="32"/>
+  <object id="43" type="saw" x="240" y="368" width="32" height="32">
+   <properties>
+    <property name="isVertical" type="bool" value="true"/>
+    <property name="negOffset" type="float" value="6"/>
+    <property name="posOffset" type="float" value="8"/>
+   </properties>
+  </object>
+  <object id="48" type="saw" x="528" y="448" width="32" height="32">
+   <properties>
+    <property name="isVertical" type="bool" value="false"/>
+    <property name="negOffset" type="float" value="8"/>
+    <property name="posOffset" type="float" value="8"/>
+   </properties>
+  </object>
  </objectgroup>
  <objectgroup id="3" name="collisions">
   <object id="8" x="-8.96733" y="0.698725" width="8.96642" height="686.763"/>
@@ -66,7 +80,7 @@
   <object id="11" x="-8.37053" y="-11.3913" width="974.5" height="10.6492"/>
   <object id="13" x="1.00569" y="639.993" width="428.666" height="48.6287"/>
   <object id="18" x="543.777" y="641.685" width="414.876" height="45.0799"/>
-  <object id="19" x="576.882" y="593.787" width="45.7843" height="47.8974"/>
+  <object id="19" type="platform" x="576.882" y="593.787" width="45.7843" height="47.8974"/>
   <object id="20" x="624.122" y="401.074" width="47.4127" height="13.2343"/>
   <object id="24" x="465.217" y="290.406" width="47.4127" height="13.2343"/>
   <object id="25" x="287.427" y="225.498" width="47.4127" height="13.2343"/>

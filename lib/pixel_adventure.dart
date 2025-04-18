@@ -9,7 +9,7 @@ import 'package:pixel_adventure/components/level.dart';
 class PixelAdventure extends FlameGame with HasKeyboardHandlerComponents, DragCallbacks, HasCollisionDetection {
   late final Character character;
   late final JoystickComponent joystick;
-  final bool isJoystickEnabled = false;
+  final bool isJoystickEnabled = true;
 
   @override
   Future<void> onLoad() async {
@@ -31,6 +31,7 @@ class PixelAdventure extends FlameGame with HasKeyboardHandlerComponents, DragCa
       world,
       camera,
     ]);
+
 
     if (isJoystickEnabled) {
       addJoystick();
@@ -55,7 +56,7 @@ class PixelAdventure extends FlameGame with HasKeyboardHandlerComponents, DragCa
         sprite: Sprite(images.fromCache(GameComponents.joystickBackground.path)),
         size: Vector2.all(128),
       ),
-      margin: const EdgeInsets.only(left: 80, bottom: 60),
+      margin: const EdgeInsets.only(left: 60, bottom: 40),
     );
 
     camera.viewport.add(joystick);
@@ -63,18 +64,29 @@ class PixelAdventure extends FlameGame with HasKeyboardHandlerComponents, DragCa
 
   void updateJoystick() {
     switch(joystick.direction) {
-      case JoystickDirection.left:
       case JoystickDirection.upLeft:
+        character.hasJumped = true;
+        character.horizontalMovement = -1;
+        break;
+      case JoystickDirection.left:
       case JoystickDirection.downLeft:
         character.horizontalMovement = -1;
         break;
-      case JoystickDirection.right:
       case JoystickDirection.upRight:
+        character.hasJumped = true;
+        character.horizontalMovement = 1;
+        break;
+      case JoystickDirection.right:
       case JoystickDirection.downRight:
         character.horizontalMovement = 1;
         break;
+      case JoystickDirection.up:
+        character.hasJumped = true;
+        break;
       default:
-        character.horizontalMovement = 0;
+        if (!character.hasJumped) {
+          character.horizontalMovement = 0;
+        }
     }
   }
 }

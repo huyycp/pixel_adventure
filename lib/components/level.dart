@@ -4,6 +4,7 @@ import 'package:flame/components.dart';
 import 'package:flame_tiled/flame_tiled.dart';
 import 'package:pixel_adventure/components/collision_component.dart';
 import 'package:pixel_adventure/components/fruit_component.dart';
+import 'package:pixel_adventure/components/saw_component.dart';
 import 'package:pixel_adventure/data/constants/game_constants.dart';
 import 'package:pixel_adventure/components/character.dart';
 import 'package:pixel_adventure/utils/enum_utils.dart';
@@ -59,6 +60,19 @@ class Level extends World {
             size: point.size,
           );
           add(fruitComponent);
+          break;
+        case GameObjects.saw:
+          final isVertical = point.properties.getValue('isVertical');
+          final negOffset = point.properties.getValue('negOffset');
+          final posOffset = point.properties.getValue('posOffset');
+          final sawComponent = SawComponent(
+            position: point.position,
+            size: point.size,
+            isVertical: isVertical,
+            negOffset: negOffset,
+            posOffset: posOffset,
+          );
+          add(sawComponent);
           break;
         default:
           break;

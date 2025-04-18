@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:pixel_adventure/components/collision_component.dart';
 import 'package:pixel_adventure/components/component_hitbox.dart';
 import 'package:pixel_adventure/components/fruit_component.dart';
+import 'package:pixel_adventure/components/saw_component.dart';
 import 'package:pixel_adventure/pixel_adventure.dart';
 import 'package:pixel_adventure/utils/extensions/string_ex.dart';
 
@@ -19,9 +20,11 @@ class Character extends SpriteAnimationGroupComponent with HasGameRef<PixelAdven
   late final SpriteAnimation runAnimation;
   late final SpriteAnimation jumpAnimation;
   late final SpriteAnimation fallAnimation;
+  late final SpriteAnimation hitAnimation;
   List<CollisionComponent> collisionComponents = [];
+  final spawnPosition = Vector2.zero();
 
-  double moveSpeed = 200;
+  double moveSpeed = 100;
   Vector2 velocity = Vector2.zero();
 
   /// Value : -1, 0, 1
@@ -29,7 +32,7 @@ class Character extends SpriteAnimationGroupComponent with HasGameRef<PixelAdven
   int horizontalMovement = 0;
 
   final double gravity = 9.8;
-  final double jumpSpeed = 400;
+  final double jumpSpeed = 300;
   final double terminalVelocity = 1000;
   bool isOnGround = true;
   bool hasJumped = false;
@@ -45,6 +48,9 @@ class Character extends SpriteAnimationGroupComponent with HasGameRef<PixelAdven
   @override
   FutureOr<void> onLoad() {
     onLoadAnimation();
+
+    spawnPosition.x = position.x;
+    spawnPosition.y = position.y;
 
     add(
       RectangleHitbox(
@@ -87,6 +93,16 @@ class Character extends SpriteAnimationGroupComponent with HasGameRef<PixelAdven
     if (other is FruitComponent) {
       collectedFruits[other.fruit] = (collectedFruits[other.fruit] ?? 0) + 1;
     }
+    if (other is SawComponent) {
+      velocity = Vector2.zero();
+      horizontalMovement = 0;
+      current = GameCharacterStates.hit;
+      Future.delayed(const Duration(milliseconds: 150), () {
+        position.x = spawnPosition.x;
+        position.y = spawnPosition.y;
+        current = GameCharacterStates.idle;
+      });
+    }
     super.onCollision(intersectionPoints, other);
   }
 
@@ -95,12 +111,14 @@ class Character extends SpriteAnimationGroupComponent with HasGameRef<PixelAdven
     runAnimation = _createAnimation(GameCharacterStates.run, frameAmount: 12);
     jumpAnimation = _createAnimation(GameCharacterStates.jump, frameAmount: 1);
     fallAnimation = _createAnimation(GameCharacterStates.fall, frameAmount: 1);
+    hitAnimation = _createAnimation(GameCharacterStates.hit, frameAmount: 7);
 
     animations = {
       GameCharacterStates.idle: idleAnimation,
       GameCharacterStates.run: runAnimation,
       GameCharacterStates.jump: jumpAnimation,
       GameCharacterStates.fall: fallAnimation,
+      GameCharacterStates.hit: hitAnimation,
     };
 
     current = GameCharacterStates.idle;
@@ -183,6 +201,7 @@ class Character extends SpriteAnimationGroupComponent with HasGameRef<PixelAdven
             position.y = component.y - height;
             velocity.y = 0;
             isOnGround = true;
+            hasJumped = false;
           }
         }
       } else {
@@ -191,6 +210,7 @@ class Character extends SpriteAnimationGroupComponent with HasGameRef<PixelAdven
             position.y = component.y - height;
             velocity.y = 0;
             isOnGround = true;
+            hasJumped = false;
           } else if (velocity.y < 0) {
             position.y = component.y + component.height;
             velocity.y = 0;

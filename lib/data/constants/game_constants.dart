@@ -8,11 +8,13 @@ enum GameLayers {
   const GameLayers(this.name);
 }
 
+/// Split into [actor], [item], [trap], [collision]
 enum GameObjects {
   character,
   enemy,
   platform,
   fruit,
+  saw,
   unknown,
 }
 
